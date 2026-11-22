@@ -1,12 +1,30 @@
-import express from 'express';
+import express from "express";
+import { config } from "./config.js";
+import { requireAuth } from "./middleware/auth.js";
+import { errorHandler } from "./middleware/errorHandler.js";
+import { authorRouter } from "./routes/author.js";
+import { loginRouter } from "./routes/login.js";
+import { tasksRouter } from "./routes/tasks.js";
 
 const app = express();
-const port = Number(process.env.PORT) || 3000;
 
-app.get('/health', (_req, res) => {
-  res.status(200).json({ status: 'ok' });
+app.disable("x-powered-by");
+app.set("strict routing", true);
+
+app.use(express.json({ limit: "32kb" }));
+
+app.get("/health/", (_req, res) => {
+  res.status(200).json({ status: "ok" });
 });
 
-app.listen(port, () => {
-  console.log(`Server listening on http://localhost:${port}`);
+app.use("/login/", loginRouter);
+
+app.use("/api/", requireAuth);
+app.use("/api/author/", authorRouter);
+app.use("/api/tasks/", tasksRouter);
+
+app.use(errorHandler);
+
+app.listen(config.port, () => {
+  console.log(`Server listening on http://localhost:${config.port}`);
 });

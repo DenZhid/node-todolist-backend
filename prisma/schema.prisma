@@ -4,5 +4,16 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Task {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ownerLogin String    @map("owner_login") @db.VarChar
+  title      String    @db.VarChar
+  done       Boolean
+  runId      String    @map("run_id") @db.VarChar
+  createdAt  DateTime? @map("created_at") @db.Date
+
+  @@map("tasks")
 }
