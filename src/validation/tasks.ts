@@ -78,13 +78,14 @@ export function parseCreateTaskBody(body: unknown): CreateTaskInput {
 
 export function parseUpdateTaskBody(body: unknown): UpdateTaskInput {
   const obj = assertPlainObject(body);
-  assertOnlyKeys(obj, ["title", "done"]);
+  assertOnlyKeys(obj, ["title", "done", "runId"]);
 
   const hasTitle = "title" in obj;
   const hasDone = "done" in obj;
+  const hasRunId = "runId" in obj;
 
-  if (!hasTitle && !hasDone) {
-    throw new AppError(400, "At least one of title or done is required");
+  if (!hasTitle && !hasDone && !hasRunId) {
+    throw new AppError(400, "At least one of title, done or runId is required");
   }
 
   const result: UpdateTaskInput = {};
@@ -93,6 +94,9 @@ export function parseUpdateTaskBody(body: unknown): UpdateTaskInput {
   }
   if (hasDone) {
     result.done = parseDone(obj.done);
+  }
+  if (hasRunId) {
+    result.runId = parseRunId(obj.runId);
   }
   return result;
 }

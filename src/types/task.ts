@@ -15,4 +15,5 @@ export type CreateTaskInput = {
 export type UpdateTaskInput = {
   title?: string;
   done?: boolean;
+  runId?: string;
 };

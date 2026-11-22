@@ -64,6 +64,7 @@ export async function updateTask(
     data: {
       ...(input.title !== undefined ? { title: input.title } : {}),
       ...(input.done !== undefined ? { done: input.done } : {}),
+      ...(input.runId !== undefined ? { runId: input.runId } : {}),
     },
   });
   return toTaskDto(task);
